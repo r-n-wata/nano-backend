@@ -1,7 +1,7 @@
 const express = require("express");
 const nodemailer = require("nodemailer");
 const app = express();
-const port = 3000;
+const port = 8000;
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -13,10 +13,10 @@ const transporter = nodemailer.createTransport({
 
 app.get("/send-test-email", async (req, res) => {
   const mailOptions = {
-    from: "your-email@gmail.com",
+    from: req.body.from || "",
     to: "ruthnwata@gmail.com",
-    subject: "Test Email",
-    text: "This is a test email sent from Node.js using Nodemailer!",
+    subject: req.body.subject,
+    text: req.body.text,
   };
 
   try {

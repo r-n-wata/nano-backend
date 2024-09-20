@@ -1,40 +1,31 @@
 const express = require("express");
-const nodemailer = require("nodemailer");
-const app = express();
-const cors = require("cors"); // Import the CORS middleware
+const mongoose = require("mongoose");
+const cors = require("cors");
+const reviewRoutes = require("./routes/reviewRoutes");
+const emailRoutes = require("./routes/emailRoutes");
 
+require("dotenv").config();
+
+const app = express();
 const port = 8000;
 
-// Use the CORS middleware to allow requests from any origin
-app.use(cors());
+// MongoDB connection (replace with your credentials)
+const mongoURI = process.env.MONGODB_KEY;
+mongoose
+  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("MongoDB connected"))
+  .catch((error) => console.error("MongoDB connection error:", error));
 
-app.use(express.json());
+// Middleware
+app.use(cors()); // Allow requests from any origin
+app.use(express.json()); // Parse incoming JSON
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "ruthnwata@gmail.com",
-    pass: "nhfe boxi sxqg qawl",
-  },
-});
+// Routes
+app.use("/api", reviewRoutes);
 
-app.post("/send-test-email", async (req, res) => {
-  const mailOptions = {
-    from: req.body.from || "",
-    to: "ruthnwata@gmail.com",
-    subject: req.body.subject,
-    text: req.body.text,
-  };
+app.use("/api", emailRoutes);
 
-  try {
-    await transporter.sendMail(mailOptions);
-    res.send("Test email sent successfully!");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Failed to send test email.");
-  }
-});
-
+// Start the server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });

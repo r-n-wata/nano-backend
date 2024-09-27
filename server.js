@@ -14,7 +14,7 @@ const mongoURI = process.env.MONGODB_KEY;
 mongoose
   .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected"))
-  .catch((error) => console.error("MongoDB connection error:", error));
+  .catch((error) => console.error("MongoDB connection error:", error.message));
 
 // Middleware
 app.use(cors()); // Allow requests from any origin

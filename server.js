@@ -7,12 +7,12 @@ const emailRoutes = require("./routes/emailRoutes");
 require("dotenv").config();
 
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 // MongoDB connection (replace with your credentials)
 const mongoURI = process.env.MONGODB_KEY;
 mongoose
-  .connect("mongodb+srv://rwata:Xh65HWrq2uUvaRxS@cluster0.wj6rk.mongodb.net/", {
+  .connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -29,6 +29,6 @@ app.use("/api", reviewRoutes);
 app.use("/api", emailRoutes);
 
 // Start the server
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`Server running at http://localhost:${port}`);
 });
